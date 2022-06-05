@@ -1,6 +1,11 @@
 <!-- no toc -->
 # Create a Blitz.js App
 
+This tutorial walks you through how to set up a Blitz app from the beginning. For more information, refer to [The Blitz Docs](https://blitzjs.com/docs/get-started).
+
+<!-- no toc -->
+## Contents
+
   - [Initial Setup](#initial-setup)
   - [Configure Postgres](#configure-postgres)
     - [Initial Postgres Installation and Configuration (Local DB)](#initial-postgres-installation-and-configuration-local-db)
@@ -17,8 +22,6 @@
     - [I Can’t install Blitz](#i-cant-install-blitz)
     - [The App Won’t Compile](#the-app-wont-compile)
     - [React-Final-Form Causes an Internal Server Error](#react-final-form-causes-an-internal-server-error)
-
-This tutorial walks you through how to set up a Blitz app from the beginning. For more information, refer to [The Blitz Docs](https://blitzjs.com/docs/get-started).
 
 ## Initial Setup
 
