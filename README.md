@@ -3,6 +3,8 @@
 
 This tutorial walks you through how to set up a Blitz app from the beginning. For more information, refer to [The Blitz Docs](https://blitzjs.com/docs/get-started).
 
+> **Note:** This tutorial is for Blitz version 0.43.0 and older
+
 <!-- no toc -->
 ## Contents
 
