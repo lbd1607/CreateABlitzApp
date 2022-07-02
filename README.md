@@ -1,13 +1,14 @@
 <!-- no toc -->
+
 # Create a Blitz.js App
 
 This tutorial walks you through how to set up a Blitz app from the beginning. For more information, refer to [The Blitz Docs](https://blitzjs.com/docs/get-started).
 
-> **Note:** This tutorial is for Blitz version 0.43.0 and older
-
 <!-- no toc -->
+
 ## Contents
 
+  - [Pre-requisites](#pre-requisites)
   - [Initial Setup](#initial-setup)
   - [Configure Postgres](#configure-postgres)
     - [Initial Postgres Installation and Configuration (Local DB)](#initial-postgres-installation-and-configuration-local-db)
@@ -22,17 +23,22 @@ This tutorial walks you through how to set up a Blitz app from the beginning. Fo
     - [Backups](#backups)
   - [Troubleshooting](#troubleshooting)
     - [I Can’t install Blitz](#i-cant-install-blitz)
+    - [When I run blitz dev, I receive error:0308010C:digital envelope routines::unsupported](#when-i-run-blitz-dev-i-receive-error0308010cdigital-envelope-routinesunsupported)
     - [The App Won’t Compile](#the-app-wont-compile)
     - [React-Final-Form Causes an Internal Server Error](#react-final-form-causes-an-internal-server-error)
 
+## Pre-requisites
+
+Blitz requires an LTS version of Node, preferably the latest active LTS version. For the latest LTS version, visit [Node.js](https://nodejs.org/).
+
 ## Initial Setup
 
-  1. Install Blitz: `npm i -g blitz`. If you have trouble installing Blitz, refer to [Troubleshooting: I Can’t install Blitz](#i-cant-install-blitz).
-  2. To ensure Blitz has been installed, check the version: `blitz -v`.
-  3. Create new project: cd into your project directory. Run `blitz new <yourProjectName>`.
-  4. Open the project in vscode.
-  5. Start project: `cd` into the project that you just created and run `blitz dev`.
-  6. If you want to run the server for production build the app then start the server: `blitz build` then `blitz start`.
+1. Install Blitz: `npm i -g blitz`. If you have trouble installing Blitz, refer to [Troubleshooting: I Can’t install Blitz](#i-cant-install-blitz).
+2. To ensure Blitz has been installed, check the version: `blitz -v`.
+3. Create new project: cd into your project directory. Run `blitz new <yourProjectName>`.
+4. Open the project in vscode.
+5. Start project: `cd` into the project that you just created and run `blitz dev`.
+6. If you want to run the server for production build the app then start the server: `blitz build` then `blitz start`.
 
 For the basics and a list of commands, check out the `README.md` in the root of the app.
 
@@ -42,52 +48,52 @@ For the basics and a list of commands, check out the `README.md` in the root of 
 
 ### Initial Postgres Installation and Configuration (Local DB)
 
-  1. Open a new terminal window and go to your home directory: `cd ~/`.
-  2. Get updates: `sudo apt update`.
-  3. Install postgres: `sudo apt install postgresql`.
-  4. Login as root user: `sudo --login --user=postgres`.
-  5. Configure initial database settings: `sudo -u postgres psql`.
-  6. Set a password: `\password postgres`, press Enter. Type the password and confirm it.
+1. Open a new terminal window and go to your home directory: `cd ~/`.
+2. Get updates: `sudo apt update`.
+3. Install postgres: `sudo apt install postgresql`.
+4. Login as root user: `sudo --login --user=postgres`.
+5. Configure initial database settings: `sudo -u postgres psql`.
+6. Set a password: `\password postgres`, press Enter. Type the password and confirm it.
 
 ### Configure Blitz to Use Your Local Postgres Database
 
-  1. In `schema.prisma`, go to `datasource` db and change the `provider` from `sqlite` to `postgres`.
-  2. In `env.local`, comment out `sqlite` and uncomment `postgres`. Set postgres to follow the format: `postgres://<dbuser>:<dbpassword>@localhost:5432/<database>`.
-  3. In vscode, delete the entire migrations folder.
-  4. In your project folder, run `blitz prisma migrate dev --preview-feature`. If you’re asked to reset the database, select `Yes`.
-  5. Start the server: `blitz dev`.
+1. In `schema.prisma`, go to `datasource` db and change the `provider` from `sqlite` to `postgres`.
+2. In `env.local`, comment out `sqlite` and uncomment `postgres`. Set postgres to follow the format: `postgres://<dbuser>:<dbpassword>@localhost:5432/<database>`.
+3. In vscode, delete the entire migrations folder.
+4. In your project folder, run `blitz prisma migrate dev --preview-feature`. If you’re asked to reset the database, select `Yes`.
+5. Start the server: `blitz dev`.
 
 ### Create another database and user for testing
 
 To use Jest for testing, you’ll need to set up another database.
 
-  1. Open a new terminal window and go to home directory: `cd ~/`.
-  2. Login as root user: `sudo --login –user=postgres`.
-  3. Create a testing database: `createdb testdb`.
-  4. Create a user: `createuser tester`.
-  5. Go into psql: `psql`.
-  6. Set a password: `\password tester`, press Enter. Type the password and confirm it.
-  7. Grant user connection to db: `grant connect on database testdb to tester;`.
-  8. Grant user db permissions: `grant all privileges on database testdb to tester;`.
-  9. Type `\q` to quit.
-  10. Type `logout` to log out.
-  11. Configure `.env.test.local` to use your new user: `postgres://<dbuser>:<dbpassword>@localhost:5432/<database>`.
-  12. To make sure this worked, go to your project folder and run `yarn test`.
+1. Open a new terminal window and go to home directory: `cd ~/`.
+2. Login as root user: `sudo --login –user=postgres`.
+3. Create a testing database: `createdb testdb`.
+4. Create a user: `createuser tester`.
+5. Go into psql: `psql`.
+6. Set a password: `\password tester`, press Enter. Type the password and confirm it.
+7. Grant user connection to db: `grant connect on database testdb to tester;`.
+8. Grant user db permissions: `grant all privileges on database testdb to tester;`.
+9. Type `\q` to quit.
+10. Type `logout` to log out.
+11. Configure `.env.test.local` to use your new user: `postgres://<dbuser>:<dbpassword>@localhost:5432/<database>`.
+12. To make sure this worked, go to your project folder and run `yarn test`.
 
 ## Create Database Schemas and Generate Models
 
 > **DANGER ZONE:** To make changes to existing schemas, edit `schema.prisma` then **only migrate** the database. Regenerating the models after these initial steps will overwrite all existing code!
 
-  1. In `schema.prisma`, create all of your models.
-  2. For each model, generate files: `blitz generate all <modelname>`.
-  3. To generate a model that is a child of another model, run the command `blitz generate all <child> --parent <parentproject>`.
-  4. Migrate the database: `blitz prisma migrate dev --preview-feature`.
+1. In `schema.prisma`, create all of your models.
+2. For each model, generate files: `blitz generate all <modelname>`.
+3. To generate a model that is a child of another model, run the command `blitz generate all <child> --parent <parentproject>`.
+4. Migrate the database: `blitz prisma migrate dev --preview-feature`.
 
 ## Set Up Your Project Files
 
-  1. Update zod validation schema names in the Create, Update, and Delete mutations as needed. The Delete mutations only need modifications for manual cascade deletions. If pulling in data from another page, add it to zod object in your Create mutations.
-  2. Update the model’s `form .tsx` file. If necessary, import final form and fields.
-  3. Update `[projectid].tsx` and `edit.tsx` to display `name` instead of `id`.
+1. Update zod validation schema names in the Create, Update, and Delete mutations as needed. The Delete mutations only need modifications for manual cascade deletions. If pulling in data from another page, add it to zod object in your Create mutations.
+2. Update the model’s `form .tsx` file. If necessary, import final form and fields.
+3. Update `[projectid].tsx` and `edit.tsx` to display `name` instead of `id`.
 
 ## Optional Stuff
 
@@ -135,20 +141,24 @@ This is likely due to a conflict between node packages or package managers.
 
 If you can’t resolve the issue, you may need to uninstall and purge nvm, node/nodejs, and npm. Then, reinstall nvm, install node, and install yarn:
 
-  1. Deactivate nvm: `nvm deactivate`.
-  2. Uninstall nvm: `nvm uninstall <version>`.
-  3. Remove nvm folder: `rm -Rf ~/.nvm`.
-  4. Uninstall node: `sudo apt-get purge nodejs`.
-  5. Uninstall npm: `sudo apt-get purge npm`.
-  6. Get updates: `sudo apt-get update`.
-  7. Install `nvm` with `curl`.
-  8. Set source file: `source .bashrc`.
-  9. Check nvm version: `nvm -v`.
-  10. Install node: `nvm install node`.
-  11. Set use to newest version of node: `nvm use node`.
-  12. Install yarn: `npm install -g yarn`.
-  13. Get updates: `sudo apt-get update`.
-  14. Install Blitz: `npm i -g blitz`.
+1. Deactivate nvm: `nvm deactivate`.
+2. Uninstall nvm: `nvm uninstall <version>`.
+3. Remove nvm folder: `rm -Rf ~/.nvm`.
+4. Uninstall node: `sudo apt-get purge nodejs`.
+5. Uninstall npm: `sudo apt-get purge npm`.
+6. Get updates: `sudo apt-get update`.
+7. Install `nvm` with `curl`.
+8. Set source file: `source .bashrc`.
+9. Check nvm version: `nvm -v`.
+10. Install node: `nvm install node`.
+11. Set use to newest version of node: `nvm use node`.
+12. Install yarn: `npm install -g yarn`.
+13. Get updates: `sudo apt-get update`.
+14. Install Blitz: `npm i -g blitz`.
+
+### When I run blitz dev, I receive error:0308010C:digital envelope routines::unsupported
+
+Your Node version is incompatible with Blitz. Install the [latest LTS node version](https://nodejs.org/), then reinstall Blitz: `npm i -g blitz`.
 
 ### The App Won’t Compile
 
